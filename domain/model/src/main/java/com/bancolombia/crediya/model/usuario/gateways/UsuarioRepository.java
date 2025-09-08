@@ -1,7 +1,5 @@
 package com.bancolombia.crediya.model.usuario.gateways;
 
-import java.math.BigInteger;
-
 import com.bancolombia.crediya.model.usuario.Usuario;
 import reactor.core.publisher.Mono;
 

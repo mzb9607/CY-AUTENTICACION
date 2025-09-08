@@ -1,5 +1,6 @@
 package com.bancolombia.crediya.model.usuario;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Builder(toBuilder = true)
 public class Usuario {
     BigInteger  idUsuario;

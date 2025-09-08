@@ -30,8 +30,7 @@ subprojects {
     dependencies {
         implementation 'io.projectreactor:reactor-core'
         implementation 'io.projectreactor.addons:reactor-extra'
-
-        testImplementation 'io.projectreactor.tools:blockhound-junit-platform:1.0.13.RELEASE'
+        //implementation 'org.slf4j:slf4j-api:2.0.13'
 
         testImplementation 'io.projectreactor:reactor-test'
         testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

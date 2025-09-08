@@ -10,8 +10,10 @@ import java.math.BigInteger;
 
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
+import lombok.extern.slf4j.Slf4j;
 
 @Repository
+@Slf4j
 public class UsuarioReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     Usuario,
     UsuarioData,
@@ -24,12 +26,26 @@ public class UsuarioReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     });
 }
 
+    @Override
+    public Mono<Usuario> save(Usuario usuario) {
+        log.info("Guardando usuario con correo: {}", usuario.getCorreoElectronico());
+        return super.save(usuario)
+            .doOnSuccess(u -> log.info("Usuario guardado exitosamente con ID: {}", u.getIdUsuario()))
+            .doOnError(e -> log.error("Error al guardar usuario: {}", e.getMessage()));
+    }
+
     public Mono<Usuario> findByCorreoElectronico(String correo) {
-        return repository.findByCorreoElectronico(correo).map(this::toEntity);
+        log.info("Buscando usuario por correo electrónico: {}", correo);
+        return repository.findByCorreoElectronico(correo).map(this::toEntity)
+            .doOnSuccess(u -> log.info("Usuario encontrado por correo electrónico: {}", correo))
+            .doOnError(e -> log.error("Error al buscar usuario por correo electrónico {}: {}", correo, e.getMessage()));
     }
 
     public Mono<Usuario> findByDocumentoIdentidad(String documentoIdentidad) {
-        return repository.findByDocumentoIdentidad(documentoIdentidad).map(this::toEntity);
+        log.info("Buscando usuario por documento de identidad: {}", documentoIdentidad);
+        return repository.findByDocumentoIdentidad(documentoIdentidad).map(this::toEntity)
+            .doOnSuccess(u -> log.info("Usuario encontrado por documento de identidad: {}", documentoIdentidad))
+            .doOnError(e -> log.error("Error al buscar usuario por documento de identidad {}: {}", documentoIdentidad, e.getMessage()));
     }
     
 }
