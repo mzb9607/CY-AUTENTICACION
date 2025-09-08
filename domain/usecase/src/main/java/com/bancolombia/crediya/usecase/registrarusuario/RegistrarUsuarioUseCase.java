@@ -19,7 +19,8 @@ public class RegistrarUsuarioUseCase {
         return validarUsuario(usuario)
                 .flatMap(this::validarCorreoElectronicoExistente)
                 .flatMap(this::validarDocumentoIdentidadExistente)
-                .flatMap(usuarioRepository::save);
+                .flatMap(usuarioRepository::save)
+                ;
     }
 
     public Mono<Usuario> validarCorreoElectronicoExistente(Usuario usuario) {
@@ -49,7 +50,6 @@ public class RegistrarUsuarioUseCase {
         List<String> validationErrors = new ArrayList<>();
         String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
 
-        // Validaciones de campos obligatorios
         if (Objects.isNull(usuario.getNombres()) || usuario.getNombres().trim().isEmpty()) {
             validationErrors.add("nombres");
         }
@@ -68,7 +68,6 @@ public class RegistrarUsuarioUseCase {
             return Mono.error(new IllegalArgumentException(errorMessage));
         }
  
-        // Validaciones de longitud
         if (usuario.getDocumentoIdentidad().length() > 20) {
             return Mono.error(new IllegalArgumentException("El documento de identidad no debe tener más de 20 caracteres."));
         }
@@ -88,12 +87,10 @@ public class RegistrarUsuarioUseCase {
             return Mono.error(new IllegalArgumentException("La dirección no debe tener más de 255 caracteres."));
         }
 
-        // Validación de formato de correo electrónico
         if (!Pattern.matches(emailRegex, usuario.getCorreoElectronico())) {
             return Mono.error(new IllegalArgumentException("Debe ingresar un correo electrónico válido."));
         }
 
-        // Validación de rango de salario_base
         if (usuario.getSalarioBase() < 0 || usuario.getSalarioBase() > 15000000) {
             return Mono.error(new IllegalArgumentException("El salario base debe estar entre 0 y 15,000,000."));
         }

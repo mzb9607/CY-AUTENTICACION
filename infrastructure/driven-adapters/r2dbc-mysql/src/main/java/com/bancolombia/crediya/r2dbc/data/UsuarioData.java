@@ -1,5 +1,6 @@
 package com.bancolombia.crediya.r2dbc.data;
 
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +13,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-import jakarta.persistence.ManyToMany;
 
 @Data
 @Builder
@@ -49,7 +49,7 @@ public class UsuarioData {
     @Column("salario_base") 
     Double  salarioBase;
 
-    @ManyToMany
+    @ManyToOne
     @Column("id_rol") 
     Integer  idRol;
 }
