@@ -35,6 +35,7 @@ public class JwtTokenProviderAdapter implements TokenProvider {
                 .subject(usuario.getCorreoElectronico())
                 .claim("idUsuario", usuario.getIdUsuario().toString()) // BigInteger como String
                 .claim("rol", usuario.getIdRol()) // Store role name
+                .claim("documentoIdentidad", usuario.getDocumentoIdentidad()) // Add documentoIdentidad to claims
                 .issuedAt(now)
                 .expiration(validity)
                 .signWith(secretKey) // Método actualizado
