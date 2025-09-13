@@ -32,13 +32,14 @@ class UsuarioReactiveRepositoryAdapterTest {
     private Usuario usuario;
     private UsuarioData usuarioData;
 
-    @BeforeEach
+        @BeforeEach
     void setUp() {
         usuario = Usuario.builder()
                 .nombres("Nombres")
                 .apellidos("Apellidos")
                 .documentoIdentidad("123456789")
                 .correoElectronico("test@example.com")
+                .password("password123")
                 .salarioBase(5000000.0)
                 .build();
 
@@ -47,6 +48,7 @@ class UsuarioReactiveRepositoryAdapterTest {
         usuarioData.setApellidos("Apellidos");
         usuarioData.setDocumentoIdentidad("123456789");
         usuarioData.setCorreoElectronico("test@example.com");
+        usuarioData.setPassword("password123");
         usuarioData.setSalarioBase(5000000.0);
     }
 

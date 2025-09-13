@@ -8,19 +8,27 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 import com.bancolombia.crediya.model.usuario.Usuario;
+import com.bancolombia.crediya.model.usuario.gateways.PasswordEncoder;
 import com.bancolombia.crediya.model.usuario.gateways.UsuarioRepository;
+import com.bancolombia.crediya.model.rol.gateways.RolRepository;
 
 @RequiredArgsConstructor
 public class RegistrarUsuarioUseCase {
 
     private final UsuarioRepository usuarioRepository;
+    private final RolRepository rolRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public Mono<Usuario> registrarUsuario(Usuario usuario) {
         return validarUsuario(usuario)
                 .flatMap(this::validarCorreoElectronicoExistente)
                 .flatMap(this::validarDocumentoIdentidadExistente)
-                .flatMap(usuarioRepository::save)
-                ;
+                .flatMap(this::validarRolExistente)
+                .map(u -> {
+                    u.setPassword(passwordEncoder.encode(u.getPassword()));
+                    return u;
+                })
+                .flatMap(usuarioRepository::save);
     }
 
     public Mono<Usuario> validarCorreoElectronicoExistente(Usuario usuario) {
@@ -45,6 +53,18 @@ public class RegistrarUsuarioUseCase {
                 });
     }
 
+    public Mono<Usuario> validarRolExistente(Usuario usuario) {
+        return rolRepository.findById(usuario.getIdRol())
+                .hasElement()
+                .flatMap(exists -> {
+                    if (!exists) {
+                        String error = "El rol especificado no existe: " + usuario.getIdRol();
+                        return Mono.error(new IllegalArgumentException(error));
+                    }
+                    return Mono.just(usuario);
+                });
+    }
+
 
     public Mono<Usuario> validarUsuario(Usuario usuario) {
         List<String> validationErrors = new ArrayList<>();
@@ -55,6 +75,9 @@ public class RegistrarUsuarioUseCase {
         }
         if (Objects.isNull(usuario.getApellidos()) || usuario.getApellidos().trim().isEmpty()) {
             validationErrors.add("apellidos");
+        }
+        if (Objects.isNull(usuario.getPassword()) || usuario.getPassword().trim().isEmpty()) {
+            validationErrors.add("password");
         }
         if (Objects.isNull(usuario.getSalarioBase())) {
             validationErrors.add("salario base");

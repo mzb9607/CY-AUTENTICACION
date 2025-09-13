@@ -20,18 +20,11 @@ public class UsuarioReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     BigInteger, UsuarioReactiveRepository
 > implements UsuarioRepository
 {
-    public UsuarioReactiveRepositoryAdapter(UsuarioReactiveRepository repository, ObjectMapper mapper) {
-    super(repository, mapper, d -> {
-        return mapper.map(d, Usuario.class);
-    });
-}
 
-    @Override
-    public Mono<Usuario> save(Usuario usuario) {
-        log.info("Guardando usuario con correo: {}", usuario.getCorreoElectronico());
-        return super.save(usuario)
-            .doOnSuccess(u -> log.info("Usuario guardado exitosamente con ID: {}", u.getIdUsuario()))
-            .doOnError(e -> log.error("Error al guardar usuario: {}", e.getMessage()));
+    public UsuarioReactiveRepositoryAdapter(UsuarioReactiveRepository repository, ObjectMapper mapper) {
+        super(repository, mapper, d -> {
+            return mapper.map(d, Usuario.class);
+        });
     }
 
     public Mono<Usuario> findByCorreoElectronico(String correo) {

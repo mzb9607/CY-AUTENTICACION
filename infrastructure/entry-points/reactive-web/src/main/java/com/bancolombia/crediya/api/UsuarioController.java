@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ public class UsuarioController {
     private final RegistrarUsuarioUseCase registrarUsuarioUseCase;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('1', '2')")
     public Mono<ResponseEntity<?>> registrarUsuario(@RequestBody RegistrarUsuarioRequest request) {
         //logger.info("Iniciando el proceso de registro de usuario.");
         return Mono.just(request)
@@ -34,6 +36,7 @@ public class UsuarioController {
                         .direccion(req.getDireccion())
                         .telefono(req.getTelefono())
                         .correoElectronico(req.getCorreoElectronico())
+                        .password(req.getPassword())
                         .salarioBase(req.getSalarioBase())
                         .idRol(req.getIdRol())
                         .build())

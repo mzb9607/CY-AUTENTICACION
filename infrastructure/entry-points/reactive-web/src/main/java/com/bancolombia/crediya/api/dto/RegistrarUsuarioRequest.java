@@ -19,6 +19,7 @@ public class RegistrarUsuarioRequest {
     private String direccion;
     private String telefono;
     private String correoElectronico;
+    private String password;
     private Double salarioBase;
     private Integer idRol;
 }
