@@ -1,6 +1,8 @@
 package com.bancolombia.crediya.usecase.registrarusuario;
 
+import com.bancolombia.crediya.model.rol.gateways.RolRepository;
 import com.bancolombia.crediya.model.usuario.Usuario;
+import com.bancolombia.crediya.model.usuario.gateways.PasswordEncoder;
 import com.bancolombia.crediya.model.usuario.gateways.UsuarioRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,12 @@ class RegistrarUsuarioUseCaseTest {
     @Mock
     private UsuarioRepository usuarioRepository;
 
+    @Mock
+    private RolRepository rolRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     @InjectMocks
     private RegistrarUsuarioUseCase registrarUsuarioUseCase;
 
@@ -32,9 +40,11 @@ class RegistrarUsuarioUseCaseTest {
                 .apellidos("Apellidos")
                 .documentoIdentidad("123456789")
                 .correoElectronico("test@example.com")
+                .password("password123")
                 .salarioBase(5000000.0)
                 .telefono("1234567890")
                 .direccion("Calle Falsa 123")
+                .idRol(1)
                 .build();
     }
 
@@ -42,6 +52,8 @@ class RegistrarUsuarioUseCaseTest {
     void registrarUsuarioExitoso() {
         when(usuarioRepository.findByCorreoElectronico(any())).thenReturn(Mono.empty());
         when(usuarioRepository.findByDocumentoIdentidad(any())).thenReturn(Mono.empty());
+        when(rolRepository.findById(any(Integer.class))).thenReturn(Mono.just(true));
+        when(passwordEncoder.encode(any())).thenReturn("encodedPassword");
         when(usuarioRepository.save(any(Usuario.class))).thenReturn(Mono.just(usuario));
 
         StepVerifier.create(registrarUsuarioUseCase.registrarUsuario(usuario))
@@ -76,6 +88,15 @@ class RegistrarUsuarioUseCaseTest {
         StepVerifier.create(registrarUsuarioUseCase.registrarUsuario(usuario))
                 .expectErrorMatches(throwable -> throwable instanceof IllegalArgumentException &&
                         throwable.getMessage().contains("Los siguientes campos son obligatorios: nombres"))
+                .verify();
+    }
+
+    @Test
+    void registrarUsuarioPasswordFaltante() {
+        usuario.setPassword(null);
+        StepVerifier.create(registrarUsuarioUseCase.registrarUsuario(usuario))
+                .expectErrorMatches(throwable -> throwable instanceof IllegalArgumentException &&
+                        throwable.getMessage().contains("Los siguientes campos son obligatorios: password"))
                 .verify();
     }
 

@@ -4,10 +4,12 @@ apply plugin: 'jacoco'
 dependencies {
 	implementation project(':usuario-repository-adapter')
 	implementation project(':reactive-web')
+	implementation project(':jwt-provider')
 	implementation 'org.reactivecommons.utils:object-mapper:0.1.0'
 	implementation project(':r2dbc-mysql')
     implementation project(':model')
     implementation project(':usecase')
+    implementation project(':password-encoder')
     implementation 'org.springframework.boot:spring-boot-starter'
     runtimeOnly('org.springframework.boot:spring-boot-devtools')
     testImplementation 'com.tngtech.archunit:archunit:1.4.1'

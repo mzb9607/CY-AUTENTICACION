@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import java.math.BigInteger;
 import java.time.LocalDate;
 
+import com.bancolombia.crediya.model.rol.Rol;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,7 @@ public class Usuario {
     String  direccion;
     String  telefono;
     String  correoElectronico;
+    String  password;
     Double  salarioBase;
     Integer idRol;
 }

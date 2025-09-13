@@ -2,6 +2,7 @@
 package com.bancolombia.crediya.api;
 
 import com.bancolombia.crediya.api.dto.RegistrarUsuarioResponse;
+import com.bancolombia.crediya.api.dto.RegistrarUsuarioRequest;
 import com.bancolombia.crediya.model.usuario.Usuario;
 import com.bancolombia.crediya.usecase.registrarusuario.RegistrarUsuarioUseCase;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
+import com.bancolombia.crediya.jwtprovider.JwtTokenProviderAdapter;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -32,6 +35,7 @@ class UsuarioControllerTest {
     private RegistrarUsuarioUseCase registrarUsuarioUseCase;
 
     private Usuario usuario;
+    private RegistrarUsuarioRequest registrarUsuarioRequest;
 
     @BeforeEach
     void setUp() {
@@ -40,6 +44,17 @@ class UsuarioControllerTest {
                 .apellidos("Apellidos")
                 .documentoIdentidad("123456789")
                 .correoElectronico("test@example.com")
+                .password("password123")
+                .salarioBase(5000000.0)
+                .idRol(1)
+                .build();
+
+        registrarUsuarioRequest = RegistrarUsuarioRequest.builder()
+                .nombres("Nombres")
+                .apellidos("Apellidos")
+                .documentoIdentidad("123456789")
+                .correoElectronico("test@example.com")
+                .password("password123")
                 .salarioBase(5000000.0)
                 .idRol(1)
                 .build();
@@ -51,7 +66,7 @@ class UsuarioControllerTest {
 
         webTestClient.post().uri("/api/v1/usuarios")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(usuario)
+                .bodyValue(registrarUsuarioRequest)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(RegistrarUsuarioResponse.class)
@@ -68,7 +83,7 @@ class UsuarioControllerTest {
 
         webTestClient.post().uri("/api/v1/usuarios")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(usuario)
+                .bodyValue(registrarUsuarioRequest)
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody(Map.class)
@@ -85,7 +100,7 @@ class UsuarioControllerTest {
 
         webTestClient.post().uri("/api/v1/usuarios")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(usuario)
+                .bodyValue(registrarUsuarioRequest)
                 .exchange()
                 .expectStatus().is5xxServerError()
                 .expectBody(Map.class)

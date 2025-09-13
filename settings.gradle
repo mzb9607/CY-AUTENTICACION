@@ -22,6 +22,10 @@ project(':model').projectDir = file('./domain/model')
 project(':usecase').projectDir = file('./domain/usecase')
 include ':reactive-web'
 project(':reactive-web').projectDir = file('./infrastructure/entry-points/reactive-web')
+include ':password-encoder'
+project(':password-encoder').projectDir = file('./infrastructure/driven-adapters/password-encoder')
+include ':jwt-provider'
+project(':jwt-provider').projectDir = file('./infrastructure/driven-adapters/jwt-provider')
 include ':usuario-repository-adapter'
 project(':usuario-repository-adapter').projectDir = file('./infrastructure/driven-adapters/usuario-repository-adapter')
 include ':r2dbc-mysql'

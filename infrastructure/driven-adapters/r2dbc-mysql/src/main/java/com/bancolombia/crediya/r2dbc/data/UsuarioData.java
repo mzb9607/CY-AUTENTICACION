@@ -46,10 +46,12 @@ public class UsuarioData {
     @Column("correo_electronico")   
     String  correoElectronico;
 
+    @Column("password")
+    String password;
+
     @Column("salario_base") 
     Double  salarioBase;
 
-    @ManyToOne
     @Column("id_rol") 
     Integer  idRol;
 }
