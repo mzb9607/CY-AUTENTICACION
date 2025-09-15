@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/api/v1/login")
+@RequestMapping
 @RequiredArgsConstructor
 public class LoginController {
 
     private final LoginUseCase loginUseCase;
 
-    @PostMapping
+    @PostMapping("/api/v1/login")
     public Mono<ResponseEntity<LoginResponse>> login(@RequestBody LoginRequest request) {
         return loginUseCase.login(request.getEmail(), request.getPassword())
                 .map(token -> ResponseEntity.ok(new LoginResponse(token)));

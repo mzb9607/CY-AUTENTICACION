@@ -52,7 +52,7 @@ class RegistrarUsuarioUseCaseTest {
     void registrarUsuarioExitoso() {
         when(usuarioRepository.findByCorreoElectronico(any())).thenReturn(Mono.empty());
         when(usuarioRepository.findByDocumentoIdentidad(any())).thenReturn(Mono.empty());
-        when(rolRepository.findById(any(Integer.class))).thenReturn(Mono.just(true));
+        when(rolRepository.findById(any(Integer.class))).thenReturn(Mono.just(Rol.builder().idRol(1).nombre("TEST_ROLE").descripcion("Test Role Description").build()));
         when(passwordEncoder.encode(any())).thenReturn("encodedPassword");
         when(usuarioRepository.save(any(Usuario.class))).thenReturn(Mono.just(usuario));
 
