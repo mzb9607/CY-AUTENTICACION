@@ -3,6 +3,7 @@ package com.bancolombia.crediya.api;
 import com.bancolombia.crediya.api.dto.RegistrarUsuarioRequest;
 import com.bancolombia.crediya.api.dto.RegistrarUsuarioResponse;
 import com.bancolombia.crediya.model.usuario.Usuario;
+import com.bancolombia.crediya.usecase.obtenerusuario.ObtenerUsuarioUseCase;
 import com.bancolombia.crediya.usecase.registrarusuario.RegistrarUsuarioUseCase;
 import lombok.RequiredArgsConstructor;
 //import org.slf4j.Logger;
@@ -14,16 +15,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
-@RequestMapping("/api/v1/usuarios")
+@RequestMapping
 @RequiredArgsConstructor
 public class UsuarioController {
 
     //private static final Logger logger = LoggerFactory.getLogger(UsuarioController.class);
     private final RegistrarUsuarioUseCase registrarUsuarioUseCase;
+    private final ObtenerUsuarioUseCase obtenerUsuarioUseCase;
 
-    @PostMapping
+    @PostMapping("/api/v1/usuarios")
     @PreAuthorize("hasAnyRole('1', '2')")
     public Mono<ResponseEntity<?>> registrarUsuario(@RequestBody RegistrarUsuarioRequest request) {
         //logger.info("Iniciando el proceso de registro de usuario.");
@@ -57,4 +62,24 @@ public class UsuarioController {
                             .build());
                 });
     }
+
+    @GetMapping("/api/v1/usuarios")
+    @PreAuthorize("hasAnyRole('1', '2')")
+    public Mono<ResponseEntity<RegistrarUsuarioResponse>> obtenerUsuario(@RequestParam String documento) {
+        return obtenerUsuarioUseCase.obtenerUsuarioPorDocumento(documento)
+                .map(user -> ResponseEntity.ok().body(RegistrarUsuarioResponse.builder()
+                        .idUsuario(user.getIdUsuario())
+                        .documentoIdentidad(user.getDocumentoIdentidad())
+                        .nombres(user.getNombres())
+                        .apellidos(user.getApellidos())
+                        .fechaNacimiento(user.getFechaNacimiento())
+                        .direccion(user.getDireccion())
+                        .telefono(user.getTelefono())
+                        .correoElectronico(user.getCorreoElectronico())
+                        .salarioBase(user.getSalarioBase())
+                        .idRol(user.getIdRol())
+                        .build()));
+    }
+
+
 }
